@@ -88,7 +88,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $log = $this->reader[6];
 
         $this->assertInstanceOf('\DateTime', $log['date']);
-        $this->assertEquals('extra', $log['logger']);
+        $this->assertEquals('extra-dashed', $log['logger']);
         $this->assertEquals('INFO', $log['level']);
         $this->assertEquals('context and extra', $log['message']);
         $this->assertArrayHasKey('foo', $log['context'][0]);
@@ -119,7 +119,7 @@ class LogReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('context', $lines[3]['logger']);
         $this->assertEquals('context', $lines[4]['logger']);
         $this->assertEquals('context', $lines[5]['logger']);
-        $this->assertEquals('extra', $lines[6]['logger']);
+        $this->assertEquals('extra-dashed', $lines[6]['logger']);
 
     }
 

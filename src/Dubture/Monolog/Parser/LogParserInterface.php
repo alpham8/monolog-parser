@@ -25,4 +25,31 @@ interface LogParserInterface
      * @return mixed
      */
     public function parse($log, $days, $pattern);
+
+    /**
+     * @return array
+     */
+    public function getPattern();
+
+    /**
+     * @param array $pattern
+     *
+     * @return void
+     */
+    public function setPattern($pattern);
+
+    /**
+     * @param string $name
+     * @param string $pattern
+     *
+     * @return void
+     */
+    public function addPattern($name, $pattern);
+
+    /**
+     * @param string $name
+     *
+     * @return void
+     */
+    public function removePattern($name);
 }

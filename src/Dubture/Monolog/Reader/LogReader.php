@@ -12,6 +12,7 @@
 namespace Dubture\Monolog\Reader;
 
 use Dubture\Monolog\Reader\AbstractReader;
+use Dubture\Monolog\Parser\LogParserInterface;
 
 /**
  * Class LogReader
@@ -30,7 +31,7 @@ class LogReader extends AbstractReader implements \Iterator, \ArrayAccess, \Coun
     protected $lineCount;
 
     /**
-     * @var \Dubture\Monolog\Parser\LogParserInterface
+     * @var LogParserInterface
      */
     protected $parser;
 
@@ -46,11 +47,14 @@ class LogReader extends AbstractReader implements \Iterator, \ArrayAccess, \Coun
     public function __construct($file, $days = 1, $pattern = 'default')
     {
         $this->file = new \SplFileObject($file, 'r');
-        $i          = 0;
+        $i          = 1;
         while (!$this->file->eof()) {
             $this->file->current();
             $this->file->next();
-            $i++;
+
+            if (!empty($this->file->current())) {
+                $i++;
+            }
         }
 
         $this->days = $days;
@@ -65,8 +69,12 @@ class LogReader extends AbstractReader implements \Iterator, \ArrayAccess, \Coun
      */
     public function getParser()
     {
-        $p =  & $this->parser;
-        return $p;
+        return $this->parser;
+    }
+
+    public function setParser(LogParserInterface $parser)
+    {
+        $this->parser = $parser;
     }
 
     /**
@@ -152,7 +160,7 @@ class LogReader extends AbstractReader implements \Iterator, \ArrayAccess, \Coun
      */
     public function valid()
     {
-        return $this->file->valid();
+        return $this->file->valid() && !empty($this->file->current());
     }
 
     /**

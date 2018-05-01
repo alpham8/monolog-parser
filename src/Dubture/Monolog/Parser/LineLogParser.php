@@ -18,11 +18,11 @@ namespace Dubture\Monolog\Parser;
 class LineLogParser implements LogParserInterface
 {
     /**
-     * @var string
+     * @var array
      */
     protected $pattern = array(
-        'default' => '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{].*[\]\}]) (?P<extra>[\[\{].*[\]\}])/',
-        'error'   => '/\[(?P<date>.*)\] (?P<logger>\w+).(?P<level>\w+): (?P<message>(.*)+) (?P<context>[^ ]+) (?P<extra>[^ ]+)/'
+        'default' => '/\[(?P<date>.*)\]\s(?P<logger>[\w-]+)\.(?P<level>\w+):\s(?P<message>[^\[\{]+)\s(?P<context>[\[\{].*[\]\}])\s(?P<extra>[\[\{].*[\]\}])/',
+        'error'   => '/\[(?P<date>.*)\]\s(?P<logger>[\w-]+).(?P<level>\w+):\s(?P<message>(.*)+)\s(?P<context>[^\s]+)\s(?P<extra>[^\s]+)/'
     );
 
 
@@ -65,10 +65,10 @@ class LineLogParser implements LogParserInterface
 
             if ($date->diff($d2)->days < $days) {
                 return $array;
-            } else {
-                return array();
             }
         }
+
+        return array();
     }
 
     /**
@@ -84,5 +84,37 @@ class LineLogParser implements LogParserInterface
         } else {
             throw new \RuntimeException("Pattern $name already exists");
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setPattern($pattern)
+    {
+        $this->pattern = $pattern;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addPattern($name, $pattern)
+    {
+        $this->pattern[$name] = $pattern;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removePattern($name)
+    {
+        unset($this->pattern[$name]);
     }
 }
